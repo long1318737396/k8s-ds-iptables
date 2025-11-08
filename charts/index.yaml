@@ -1,3 +1,13 @@
 apiVersion: v1
-entries: {}
-generated: "2025-11-09T01:16:00.446346+08:00"
+entries:
+  iptables:
+  - apiVersion: v2
+    appVersion: 0.3.1
+    created: "2025-11-09T01:17:21.116013+08:00"
+    description: intput iptables for kubernetes
+    digest: 36cef2581cbab8d61d474fce8e4ebd3c90616c1c342d5074142354799963e4cd
+    name: iptables
+    urls:
+    - https://long1318737396.github.io/k8s-ds-iptables/charts/iptables-0.3.1.tgz
+    version: 0.3.1
+generated: "2025-11-09T01:17:21.115477+08:00"
