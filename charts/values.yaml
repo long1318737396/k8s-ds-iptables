@@ -1,0 +1,49 @@
+---
+## @section parameters
+
+## @param image.registry Fluentd image registry
+## @param image.repository Fluentd image repository
+## @param image.tag Fluentd image tag (immutable tags are recommended)
+## @param image.pullPolicy Fluentd image pull policy
+## @param image.pullSecrets Fluentd image pull secrets
+##
+image:
+  registry: registry.cn-hangzhou.aliyuncs.com/magictommy
+  repository: alpine
+  tag: iptables_init_v1
+  ## Specify a imagePullPolicy
+  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  pullPolicy: IfNotPresent
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ##
+  ## pullSecrets:
+  ##   - myRegistryKeySecretName
+  pullSecrets:
+    - registry-secret
+
+podAnnotations: {}
+
+configmap:
+  # specify the config map name
+  name: yifangyun-iptables-config
+
+resources: 
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+#添加source信任的ip
+ips: "172.16.79.241,172.16.79.242,172.16.79.243,127.0.0.1"
+#iptables保存的位置
+iptablesHostpath: /var/lib/iptables

@@ -1,0 +1,51 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configmap.name }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+{{ include "iptables.labels" . | indent 4 }}
+data:
+  custom-add-iptables.sh: |-
+    #!/bin/sh
+    set -ex
+    iptables_save_date=$(date +%Y%m%d-%H%M%S)
+    iptables-save > /var/lib/iptables/iptables-save-${iptables_save_date}
+    iptables -D INPUT -j custom-iptable || true
+    iptables -F custom-iptable || true
+    iptables -X custom-iptable || true
+    iptables -N custom-iptable || true
+    iptables -I INPUT -j custom-iptable || true
+    iptables -A custom-iptable -s {{ .Values.ips }} -p tcp --dport 88 -j ACCEPT -m comment --comment "keystone"
+    iptables -A custom-iptable -s {{ .Values.ips }} -p tcp --dport 873 -j ACCEPT -m comment --comment "rsync"
+    iptables -A custom-iptable -s {{ .Values.ips }} -p tcp --dport 3306 -j ACCEPT -m comment --comment "mysql"
+    iptables -A custom-iptable -s {{ .Values.ips }} -p tcp --dport 5000 -j ACCEPT -m comment --comment "keystone"
+    iptables -A custom-iptable -s {{ .Values.ips }} -p tcp --dport 6200 -j ACCEPT -m comment --comment "swift-storage"
+    iptables -A custom-iptable -s {{ .Values.ips }} -p tcp --dport 6201 -j ACCEPT -m comment --comment "swift-storage"
+    iptables -A custom-iptable -s {{ .Values.ips }} -p tcp --dport 6202 -j ACCEPT -m comment --comment "swift-storage"
+    iptables -A custom-iptable -s {{ .Values.ips }} -p tcp --dport 6379 -j ACCEPT -m comment --comment "redis"
+    iptables -A custom-iptable -s {{ .Values.ips }} -p tcp --dport 7953 -j ACCEPT -m comment --comment "ilogtail"
+    iptables -A custom-iptable -s {{ .Values.ips }} -p tcp --dport 8045 -j ACCEPT -m comment --comment "grafana-agent"
+    iptables -A custom-iptable -s {{ .Values.ips }} -p tcp --dport 8080 -j ACCEPT -m comment --comment "swift-proxy-server"
+    iptables -A custom-iptable -s {{ .Values.ips }} -p tcp --dport 9100 -j ACCEPT -m comment --comment "node-exporter"
+    iptables -A custom-iptable -s {{ .Values.ips }} -p tcp --dport 9256 -j ACCEPT -m comment --comment "process-exporter"
+    iptables -A custom-iptable -s {{ .Values.ips }} -p tcp --dport 9150 -j ACCEPT -m comment --comment "memcached-exporter"
+    iptables -A custom-iptable -s {{ .Values.ips }} -p tcp --dport 9121 -j ACCEPT -m comment --comment "redis-exporter"
+    iptables -A custom-iptable -s {{ .Values.ips }} -p tcp --dport 11211 -j ACCEPT -m comment --comment "memcached"
+    iptables -A custom-iptable -p tcp --dport 88 -j DROP
+    iptables -A custom-iptable -p tcp --dport 873 -j DROP
+    iptables -A custom-iptable -p tcp --dport 3306 -j DROP
+    iptables -A custom-iptable -p tcp --dport 5000 -j DROP
+    iptables -A custom-iptable -p tcp --dport 6200 -j DROP
+    iptables -A custom-iptable -p tcp --dport 6201 -j DROP
+    iptables -A custom-iptable -p tcp --dport 6202 -j DROP
+    iptables -A custom-iptable -p tcp --dport 6379 -j DROP
+    iptables -A custom-iptable -p tcp --dport 7953 -j DROP
+    iptables -A custom-iptable -p tcp --dport 8045 -j DROP
+    iptables -A custom-iptable -p tcp --dport 8080 -j DROP
+    iptables -A custom-iptable -p tcp --dport 9100 -j DROP
+    iptables -A custom-iptable -p tcp --dport 9256 -j DROP
+    iptables -A custom-iptable -p tcp --dport 9150 -j DROP
+    iptables -A custom-iptable -p tcp --dport 9121 -j DROP
+    iptables -A custom-iptable -p tcp --dport 11211 -j DROP
