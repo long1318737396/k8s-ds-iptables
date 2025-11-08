@@ -6,9 +6,9 @@
 ## Quick Start
 
 ```
-helm repo add k8s-ds-iptables https://long1318737396.github.io/k8s-ds-iptables/
+helm repo add k8s-ds-iptables https://long1318737396.github.io/k8s-ds-iptables/charts
 
-helm install custom-iptables -n ${namespace}  k8s-ds-iptables/k8s-ds-iptables
+helm  install k8s-ds-iptables k8s-ds-iptables/iptables -n ${namespace}
 ```
 
 借鉴参考
